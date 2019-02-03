@@ -62,7 +62,7 @@ class App extends Component {
         value = parseFloat(this.state.displayValue);
       }
       else {
-        value /= parseFloat(this.state.displayValue);
+        value /= parseFloat(Math.ceil(this.state.displayValue) * 1);
       }
       this.setState({
         previousValue: value,
@@ -104,10 +104,21 @@ class App extends Component {
         displayValue: value,
       })
     }
+   
+    if (e.currentTarget.value === '.' && this.state.displayValue !== '0') {
+      let value = (this.state.displayValue);
+      let newValue = this.state.displayValue.toString()
+      if(!newValue.includes(".")){
+        value += ".";
+      }
+      this.setState({
+        waitingForNewValue: true,
+        displayValue: value,
+      })
+    }
 
 
-
-    if (e.currentTarget.value === '=' && this.state.displayValue !== '0') {
+    if ((e.currentTarget.value === '=' && this.state.displayValue !== '0') || this.state.operation !== "decimal") {
       let value = parseFloat(this.state.previousValue);
       if (this.state.operation === 'addition') {
         value += parseFloat(this.state.displayValue);
@@ -121,9 +132,7 @@ class App extends Component {
       else if (this.state.operation === 'multiplication') {
         value *= parseFloat(this.state.displayValue);
       }
-      else {
-        value = parseFloat(this.state.displayValue);
-      }
+      
       this.setState({
         displayValue: value,
         previousValue: null,
@@ -144,7 +153,6 @@ class App extends Component {
   }
   isWaiting = () => {
     let temp = this.state.waitingForNewValue;
-    console.log(temp);
     if (temp) {
       return (<TheButtons name="C" cb={this.operator} />)
     }
@@ -190,7 +198,7 @@ class App extends Component {
 
         <div className="row">
           <TheButtons name="0" big="true" cb={this.getNum} />
-          <TheButtons name="." />
+          <TheButtons name="." cb={this.operator}/>
           <TheButtons name="=" orange="true" cb={this.operator} />
         </div>
 
