@@ -110,11 +110,12 @@ class App extends Component {
         value += ".";
       }
       this.setState({
+        operation: 'decimal',
         displayValue: value,
       })
     }
 
-    if ((e.currentTarget.value === '=' && this.state.displayValue !== '0') || (e.currentTarget.value === '=' && this.state.displayValue[this.state.displayValue.length - 1] !== '.')) {
+    if ((e.currentTarget.value === '=' && this.state.displayValue !== '0')) {
       let value = parseFloat(this.state.previousValue);
       if (this.state.operation === 'addition') {
         value += parseFloat(this.state.displayValue);
@@ -142,7 +143,7 @@ class App extends Component {
   }
 
   getNum = (e) => {
-    if (this.state.displayValue === '0' || this.state.operation === 'equal')
+    if (this.state.displayValue === '0')
       this.setState({ displayValue: e.currentTarget.value })
     else {
       let newValue = this.state.displayValue;
