@@ -18,14 +18,14 @@ class App extends Component {
         displayValue: '0'
       })
     }
-    if(e.currentTarget.value === 'AC'){
+    if (e.currentTarget.value === 'AC') {
       this.setState({
         displayValue: '0',
         previousValue: null,
         operation: null,
         waitingForNewValue: false
       })
-    } 
+    }
     if (e.currentTarget.value === '+' && this.state.displayValue !== '0') {
       let value = parseFloat(this.state.previousValue);
       if (this.state.previousValue === null) {
@@ -91,7 +91,6 @@ class App extends Component {
       value = (parseFloat(this.state.displayValue) * 0.01);
       this.setState({
         operation: 'percentage',
-        waitingForNewValue: true,
         displayValue: value,
       })
     }
@@ -100,31 +99,28 @@ class App extends Component {
       value = (parseFloat(this.state.displayValue) * -1);
       this.setState({
         operation: 'negative',
-        waitingForNewValue: true,
         displayValue: value,
       })
     }
-   
+
     if (e.currentTarget.value === '.' && this.state.displayValue !== '0') {
       let value = (this.state.displayValue);
       let newValue = this.state.displayValue.toString()
-      if(!newValue.includes(".")){
+      if (!newValue.includes(".")) {
         value += ".";
       }
       this.setState({
-        waitingForNewValue: true,
         displayValue: value,
       })
     }
 
-
-    if ((e.currentTarget.value === '=' && this.state.displayValue !== '0') || this.state.operation !== "decimal") {
+    if ((e.currentTarget.value === '=' && this.state.displayValue !== '0') || (e.currentTarget.value === '=' && this.state.displayValue[this.state.displayValue.length - 1] !== '.')) {
       let value = parseFloat(this.state.previousValue);
       if (this.state.operation === 'addition') {
         value += parseFloat(this.state.displayValue);
       }
-      else if(this.state.operation === 'subraction') {
-        value -= parseFloat(this.state.displayValue); 
+      else if (this.state.operation === 'subtraction') {
+        value -= parseFloat(this.state.displayValue);
       }
       else if (this.state.operation === 'division') {
         value /= parseFloat(this.state.displayValue);
@@ -132,7 +128,10 @@ class App extends Component {
       else if (this.state.operation === 'multiplication') {
         value *= parseFloat(this.state.displayValue);
       }
-      
+      else {
+        value = this.state.displayValue;
+      }
+
       this.setState({
         displayValue: value,
         previousValue: null,
@@ -160,8 +159,6 @@ class App extends Component {
       return (<TheButtons name="AC" cb={this.operator} />)
     }
   }
-
-
   render() {
     return (
       <div className="container" style={{ width: '50%' }}>
@@ -170,7 +167,7 @@ class App extends Component {
         <div className="row">
           {this.isWaiting()}
           <TheButtons name="%" cb={this.operator} />
-          <TheButtons name="±"  cb={this.operator}/>
+          <TheButtons name="±" cb={this.operator} />
           <TheButtons name="÷" orange="true" cb={this.operator} />
         </div>
 
@@ -198,7 +195,7 @@ class App extends Component {
 
         <div className="row">
           <TheButtons name="0" big="true" cb={this.getNum} />
-          <TheButtons name="." cb={this.operator}/>
+          <TheButtons name="." cb={this.operator} />
           <TheButtons name="=" orange="true" cb={this.operator} />
         </div>
 
