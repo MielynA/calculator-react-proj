@@ -42,26 +42,45 @@ class App extends Component {
       })
     }
     if(e.currentTarget.value=== '÷' && this.state.displayValue !== '0'){
+      let value = parseInt(this.state.previousValue);
+      if(this.state.previousValue === null){
+        value = parseInt(this.state.displayValue);
+      }
+      else{
+        value /= parseInt(this.state.displayValue);
+      }
       this.setState({
-        previousValue:parseInt(this.state.displayValue),
+        previousValue:value,
         operation: 'division',
         waitingForNewValue: true,
         displayValue: '0'
       })
     }
     if(e.currentTarget.value=== 'x' && this.state.displayValue !== '0'){
+      let value = parseInt(this.state.previousValue);
+      if(this.state.previousValue === null){
+        value = parseInt(this.state.displayValue);
+      }
+      else{
+        value *= parseInt(this.state.displayValue);
+      }
       this.setState({
-        previousValue:parseInt(this.state.displayValue),
+        previousValue:value,
         operation: 'multiplication',
         waitingForNewValue: true,
         displayValue: '0'
       })
     }
     if(e.currentTarget.value=== '=' && this.state.displayValue !== '0'){
-
       let value = parseInt(this.state.previousValue);
       if(this.state.operation === 'addition'){
         value += parseInt(this.state.displayValue);
+      }
+      else if(this.state.operation === 'division'){
+        value /= parseInt(this.state.displayValue);
+      }
+      else if(this.state.operation === 'multiplication'){
+        value *= parseInt(this.state.displayValue);
       }
       else{
         value = parseInt(this.state.displayValue);
@@ -73,11 +92,10 @@ class App extends Component {
         waitingForNewValue: false,
       })
     }
-      
   }
    
   getNum = (e) =>{
-    if(this.state.displayValue === '0')
+    if(this.state.displayValue === '0' || this.state.operation === 'equal')
       this.setState({displayValue: e.currentTarget.value})
     else{
       let newValue = this.state.displayValue;
