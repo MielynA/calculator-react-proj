@@ -18,6 +18,14 @@ class App extends Component {
         displayValue: '0'
       })
     }
+    if(e.currentTarget.value === 'AC'){
+      this.setState({
+        displayValue: '0',
+        previousValue: null,
+        operation: null,
+        waitingForNewValue: false
+      })
+    } 
     if (e.currentTarget.value === '+' && this.state.displayValue !== '0') {
       let value = parseFloat(this.state.previousValue);
       if (this.state.previousValue === null) {
@@ -79,11 +87,19 @@ class App extends Component {
       })
     }
     if (e.currentTarget.value === '%' && this.state.displayValue !== '0') {
-      console.log('here')
       let value = parseFloat(this.state.previousValue);
       value = (parseFloat(this.state.displayValue) * 0.01);
       this.setState({
         operation: 'percentage',
+        waitingForNewValue: true,
+        displayValue: value,
+      })
+    }
+    if (e.currentTarget.value === '±' && this.state.displayValue !== '0') {
+      let value = parseFloat(this.state.previousValue);
+      value = (parseFloat(this.state.displayValue) * -1);
+      this.setState({
+        operation: 'negative',
         waitingForNewValue: true,
         displayValue: value,
       })
@@ -95,6 +111,9 @@ class App extends Component {
       let value = parseFloat(this.state.previousValue);
       if (this.state.operation === 'addition') {
         value += parseFloat(this.state.displayValue);
+      }
+      else if(this.state.operation === 'subraction') {
+        value -= parseFloat(this.state.displayValue); 
       }
       else if (this.state.operation === 'division') {
         value /= parseFloat(this.state.displayValue);
@@ -130,7 +149,7 @@ class App extends Component {
       return (<TheButtons name="C" cb={this.operator} />)
     }
     else {
-      return (<TheButtons name="AC" />)
+      return (<TheButtons name="AC" cb={this.operator} />)
     }
   }
 
@@ -143,7 +162,7 @@ class App extends Component {
         <div className="row">
           {this.isWaiting()}
           <TheButtons name="%" cb={this.operator} />
-          <TheButtons name="±" />
+          <TheButtons name="±"  cb={this.operator}/>
           <TheButtons name="÷" orange="true" cb={this.operator} />
         </div>
 
