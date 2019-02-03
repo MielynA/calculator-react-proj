@@ -34,8 +34,15 @@ class App extends Component {
       })
     }
     if(e.currentTarget.value === '-' && this.state.displayValue !== '0'){
+      let value = parseInt(this.state.previousValue);
+      if(this.state.previousValue === null){
+        value = parseInt(this.state.displayValue);
+      }
+      else{
+        value -= parseInt(this.state.displayValue);
+      }
       this.setState({
-        previousValue:parseInt(this.state.displayValue),
+        previousValue: value,
         operation: 'subtraction',
         waitingForNewValue: true,
         displayValue: '0'
@@ -71,6 +78,22 @@ class App extends Component {
         displayValue: '0'
       })
     }
+    if(e.currentTarget.value === '%' && this.state.displayValue !== '0'){
+      console.log('here')
+      let value = parseFloat(this.state.previousValue);
+        value = (parseFloat(this.state.displayValue) * 0.01);
+        console.log(value)
+      
+      this.setState({
+        previousValue: value,
+        operation: 'percentage',
+        waitingForNewValue: true,
+        displayValue: value,
+      })
+    } 
+   
+
+
     if(e.currentTarget.value=== '=' && this.state.displayValue !== '0'){
       let value = parseInt(this.state.previousValue);
       if(this.state.operation === 'addition'){
@@ -122,7 +145,7 @@ class App extends Component {
       
       <div className="row">
       {this.isWaiting ()}
-      <TheButtons name="%" />
+      <TheButtons name="%"  cb={this.operator}/>
       <TheButtons name="±" />
       <TheButtons name="÷" orange = "true" cb={this.operator}/>
       </div>
