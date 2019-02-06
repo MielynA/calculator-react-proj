@@ -38,7 +38,7 @@ class App extends Component {
         previousValue: value,
         operation: 'addition',
         waitingForNewValue: true,
-        displayValue: '0'
+        displayValue: value,
       })
     }
     if (e.currentTarget.value === '-' && this.state.displayValue !== '0') {
@@ -53,7 +53,7 @@ class App extends Component {
         previousValue: value,
         operation: 'subtraction',
         waitingForNewValue: true,
-        displayValue: '0'
+        displayValue: value,
       })
     }
     if (e.currentTarget.value === '÷' && this.state.displayValue !== '0') {
@@ -68,7 +68,7 @@ class App extends Component {
         previousValue: value,
         operation: 'division',
         waitingForNewValue: true,
-        displayValue: '0'
+        displayValue: value,
       })
     }
     if (e.currentTarget.value === 'x' && this.state.displayValue !== '0') {
@@ -83,7 +83,7 @@ class App extends Component {
         previousValue: value,
         operation: 'multiplication',
         waitingForNewValue: true,
-        displayValue: '0'
+        displayValue: value,
       })
     }
     if (e.currentTarget.value === '%' && this.state.displayValue !== '0') {
@@ -143,7 +143,7 @@ class App extends Component {
   }
 
   getNum = (e) => {
-    if (this.state.displayValue === '0')
+    if (this.state.displayValue === '0' || this.state.displayValue === this.state.previousValue)
       this.setState({ displayValue: e.currentTarget.value })
     else {
       let newValue = this.state.displayValue;
