@@ -12,6 +12,7 @@ class App extends Component {
       waitingForNewValue: false
     }
   }
+//Get Operator Event Listener for Operator Buttons
   operator = (e) => {
     if (e.currentTarget.value === 'C') {
       this.setState({
@@ -26,7 +27,7 @@ class App extends Component {
         waitingForNewValue: false
       })
     }
-    if (e.currentTarget.value === '+' && this.state.displayValue !== '0') {
+    if (e.currentTarget.value === '+' && this.state.displayValue !== '0' && this.state.waitingForNewValue === false) {
       let value = parseFloat(this.state.previousValue);
       if (this.state.previousValue === null) {
         value = parseFloat(this.state.displayValue);
@@ -41,7 +42,7 @@ class App extends Component {
         displayValue: value,
       })
     }
-    if (e.currentTarget.value === '-' && this.state.displayValue !== '0') {
+    if (e.currentTarget.value === '-' && this.state.displayValue !== '0'  && this.state.waitingForNewValue === false) {
       let value = parseFloat(this.state.previousValue);
       if (this.state.previousValue === null) {
         value = parseFloat(this.state.displayValue);
@@ -56,7 +57,7 @@ class App extends Component {
         displayValue: value,
       })
     }
-    if (e.currentTarget.value === '÷' && this.state.displayValue !== '0') {
+    if (e.currentTarget.value === '÷' && this.state.displayValue !== '0' && this.state.waitingForNewValue === false) {
       let value = parseFloat(this.state.previousValue);
       if (this.state.previousValue === null) {
         value = parseFloat(this.state.displayValue);
@@ -71,7 +72,7 @@ class App extends Component {
         displayValue: value,
       })
     }
-    if (e.currentTarget.value === 'x' && this.state.displayValue !== '0') {
+    if (e.currentTarget.value === 'x' && this.state.displayValue !== '0' && this.state.waitingForNewValue === false) {
       let value = parseFloat(this.state.previousValue);
       if (this.state.previousValue === null) {
         value = parseFloat(this.state.displayValue);
@@ -86,7 +87,7 @@ class App extends Component {
         displayValue: value,
       })
     }
-    if (e.currentTarget.value === '%' && this.state.displayValue !== '0') {
+    if (e.currentTarget.value === '%' && this.state.displayValue !== '0' && this.state.waitingForNewValue === false) {
       let value = parseFloat(this.state.previousValue);
       value = (parseFloat(this.state.displayValue) * 0.01);
       this.setState({
@@ -102,7 +103,6 @@ class App extends Component {
         displayValue: value,
       })
     }
-
     if (e.currentTarget.value === '.' && this.state.displayValue !== '0') {
       let value = (this.state.displayValue);
       let newValue = this.state.displayValue.toString()
@@ -114,8 +114,7 @@ class App extends Component {
         displayValue: value,
       })
     }
-
-    if ((e.currentTarget.value === '=' && this.state.displayValue !== '0')) {
+    if (e.currentTarget.value === '=' && this.state.displayValue !== '0') {
       let value = parseFloat(this.state.previousValue);
       if (this.state.operation === 'addition') {
         value += parseFloat(this.state.displayValue);
@@ -132,25 +131,31 @@ class App extends Component {
       else {
         value = this.state.displayValue;
       }
-
       this.setState({
         displayValue: value,
         previousValue: null,
         operation: 'equal',
-        waitingForNewValue: false,
+        waitingForNewValue: false
       })
     }
   }
-
+//Get Number Event Listener for Number Buttons
   getNum = (e) => {
-    if (this.state.displayValue === '0' || this.state.displayValue === this.state.previousValue)
-      this.setState({ displayValue: e.currentTarget.value })
-    else {
+    if (this.state.displayValue === '0' || this.state.displayValue === this.state.previousValue || this.state.operation === 'equal'){
+      this.setState({ 
+          displayValue: e.currentTarget.value, 
+          waitingForNewValue: false,
+        })
+      if(this.state.operation === 'equal')
+        this.setState({operation:null})
+    }
+    else{
       let newValue = this.state.displayValue;
       newValue += e.currentTarget.value;
       this.setState({ displayValue: newValue })
     }
   }
+//Waiting to display C or AC depending on Operator Buttons pressed.
   isWaiting = () => {
     let temp = this.state.waitingForNewValue;
     if (temp) {
@@ -160,6 +165,7 @@ class App extends Component {
       return (<TheButtons name="AC" cb={this.operator} />)
     }
   }
+//RENDER 
   render() {
     return (
       <div className="container" style={{ width: '50%' }}>
