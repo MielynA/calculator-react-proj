@@ -12,8 +12,11 @@ class App extends Component {
       waitingForNewValue: false
     }
   }
-//Get Operator Event Listener for Operator Buttons
+  //Get Operator Event Listener for Operator Buttons
   operator = (e) => {
+
+    let newVal = this.state.displayValue.toString();
+    console.log(newVal.includes('.'))
     if (e.currentTarget.value === 'C') {
       this.setState({
         displayValue: '0'
@@ -27,67 +30,43 @@ class App extends Component {
         waitingForNewValue: false
       })
     }
-    if (e.currentTarget.value === '+' && this.state.displayValue !== '0' && this.state.waitingForNewValue === false) {
-      let value = parseFloat(this.state.previousValue);
-      if (this.state.previousValue === null) {
-        value = parseFloat(this.state.displayValue);
-      }
-      else {
-        value += parseFloat(this.state.displayValue);
-      }
-      this.setState({
-        previousValue: value,
-        operation: 'addition',
-        waitingForNewValue: true,
-        displayValue: value,
-      })
+    if (e.currentTarget.value === '+' && this.state.displayValue !== '0') {
+      this.getAns()
+        let value = this.state.displayValue
+        this.setState({
+          previousValue: value,
+          operation: 'addition',
+          waitingForNewValue: true,
+        })
     }
-    if (e.currentTarget.value === '-' && this.state.displayValue !== '0'  && this.state.waitingForNewValue === false) {
-      let value = parseFloat(this.state.previousValue);
-      if (this.state.previousValue === null) {
-        value = parseFloat(this.state.displayValue);
-      }
-      else {
-        value -= parseFloat(this.state.displayValue);
-      }
+    if (e.currentTarget.value === '-' && this.state.displayValue !== '0') {
+      this.getAns()
+      let value = this.state.displayValue
       this.setState({
         previousValue: value,
         operation: 'subtraction',
         waitingForNewValue: true,
-        displayValue: value,
       })
     }
-    if (e.currentTarget.value === '÷' && this.state.displayValue !== '0' && this.state.waitingForNewValue === false) {
-      let value = parseFloat(this.state.previousValue);
-      if (this.state.previousValue === null) {
-        value = parseFloat(this.state.displayValue);
-      }
-      else {
-        value /= parseFloat(Math.ceil(this.state.displayValue) * 1);
-      }
+    if (e.currentTarget.value === '÷' && this.state.displayValue !== '0') {
+      this.getAns()
+      let value = this.state.displayValue
       this.setState({
         previousValue: value,
         operation: 'division',
         waitingForNewValue: true,
-        displayValue: value,
       })
     }
-    if (e.currentTarget.value === 'x' && this.state.displayValue !== '0' && this.state.waitingForNewValue === false) {
-      let value = parseFloat(this.state.previousValue);
-      if (this.state.previousValue === null) {
-        value = parseFloat(this.state.displayValue);
-      }
-      else {
-        value *= parseFloat(this.state.displayValue);
-      }
+    if (e.currentTarget.value === 'x' && this.state.displayValue !== '0') {
+      this.getAns()
+      let value = this.state.displayValue
       this.setState({
         previousValue: value,
         operation: 'multiplication',
         waitingForNewValue: true,
-        displayValue: value,
       })
     }
-    if (e.currentTarget.value === '%' && this.state.displayValue !== '0' && this.state.waitingForNewValue === false) {
+    if (e.currentTarget.value === '%' && this.state.displayValue !== '0') {
       let value = parseFloat(this.state.previousValue);
       value = (parseFloat(this.state.displayValue) * 0.01);
       this.setState({
@@ -103,59 +82,68 @@ class App extends Component {
         displayValue: value,
       })
     }
-    if (e.currentTarget.value === '.' && this.state.displayValue !== '0') {
-      let value = (this.state.displayValue);
-      let newValue = this.state.displayValue.toString()
-      if (!newValue.includes(".")) {
-        value += ".";
-      }
-      this.setState({
-        operation: 'decimal',
-        displayValue: value,
-      })
-    }
+    
+
     if (e.currentTarget.value === '=' && this.state.displayValue !== '0') {
-      let value = parseFloat(this.state.previousValue);
-      if (this.state.operation === 'addition') {
-        value += parseFloat(this.state.displayValue);
-      }
-      else if (this.state.operation === 'subtraction') {
-        value -= parseFloat(this.state.displayValue);
-      }
-      else if (this.state.operation === 'division') {
-        value /= parseFloat(this.state.displayValue);
-      }
-      else if (this.state.operation === 'multiplication') {
-        value *= parseFloat(this.state.displayValue);
-      }
-      else {
-        value = this.state.displayValue;
-      }
-      this.setState({
-        displayValue: value,
-        previousValue: null,
-        operation: 'equal',
-        waitingForNewValue: false
-      })
+      this.getAns();
     }
   }
-//Get Number Event Listener for Number Buttons
-  getNum = (e) => {
-    if (this.state.displayValue === '0' || this.state.displayValue === this.state.previousValue || this.state.operation === 'equal'){
-      this.setState({ 
-          displayValue: e.currentTarget.value, 
-          waitingForNewValue: false,
+  chkDot = () =>{
+      if (this.state.displayValue.indexOf('.') === -1) {
+        this.setState({
+          displayValue: this.state.displayValue+'.',
         })
-      if(this.state.operation === 'equal')
-        this.setState({operation:null})
+      }
+  }
+  getAns = () => {
+    let value = parseFloat(this.state.previousValue);
+    if (this.state.operation === 'addition') {
+      value += parseFloat(this.state.displayValue);
     }
-    else{
+    else if (this.state.operation === 'subtraction') {
+      value -= parseFloat(this.state.displayValue);
+    }
+    else if (this.state.operation === 'division') {
+      value /= parseFloat(this.state.displayValue);
+    }
+    else if (this.state.operation === 'multiplication') {
+      value *= parseFloat(this.state.displayValue);
+    }
+    else {
+      value = this.state.displayValue;
+    }
+    this.setState({
+      displayValue: value,
+      previousValue: value,
+      operation: 'equal',
+      waitingForNewValue: false
+    })
+  }
+  //Get Number Event Listener for Number Buttons
+  getNum = (e) => {
+    let newVal = this.state.displayValue.toString();
+    console.log(newVal.includes('.'))
+    if ((this.state.displayValue === '0' || this.state.operation !== null )) {
+      this.setState({
+        displayValue: e.currentTarget.value,
+      })
+      if (this.state.operation === 'equal'){
+        this.setState({operation: null})
+      }
+      else if(this.state.operation !== null){
+        console.log("HERE");
+        let value = parseFloat(this.state.displayValue);
+        this.setState({previousValue: value})
+      }
+    }
+    else {
+      console.log("ELSE");
       let newValue = this.state.displayValue;
       newValue += e.currentTarget.value;
       this.setState({ displayValue: newValue })
     }
   }
-//Waiting to display C or AC depending on Operator Buttons pressed.
+  //Waiting to display C or AC depending on Operator Buttons pressed.
   isWaiting = () => {
     let temp = this.state.waitingForNewValue;
     if (temp) {
@@ -165,7 +153,7 @@ class App extends Component {
       return (<TheButtons name="AC" cb={this.operator} />)
     }
   }
-//RENDER 
+  //RENDER 
   render() {
     return (
       <div className="container" style={{ width: '50%' }}>
@@ -202,7 +190,7 @@ class App extends Component {
 
         <div className="row">
           <TheButtons name="0" big="true" cb={this.getNum} />
-          <TheButtons name="." cb={this.operator} />
+          <TheButtons name="." cb={this.chkDot} />
           <TheButtons name="=" orange="true" cb={this.operator} />
         </div>
 
