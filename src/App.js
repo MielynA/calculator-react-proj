@@ -14,9 +14,6 @@ class App extends Component {
   }
   //Get Operator Event Listener for Operator Buttons
   operator = (e) => {
-
-    let newVal = this.state.displayValue.toString();
-    console.log(newVal.includes('.'))
     if (e.currentTarget.value === 'C') {
       this.setState({
         displayValue: '0'
@@ -70,7 +67,6 @@ class App extends Component {
       let value = parseFloat(this.state.previousValue);
       value = (parseFloat(this.state.displayValue) * 0.01);
       this.setState({
-        operation: 'percentage',
         displayValue: value,
       })
     }
@@ -78,12 +74,9 @@ class App extends Component {
       let value = parseFloat(this.state.previousValue);
       value = (parseFloat(this.state.displayValue) * -1);
       this.setState({
-        operation: 'negative',
         displayValue: value,
       })
     }
-    
-
     if (e.currentTarget.value === '=' && this.state.displayValue !== '0') {
       this.getAns();
     }
@@ -121,8 +114,6 @@ class App extends Component {
   }
   //Get Number Event Listener for Number Buttons
   getNum = (e) => {
-    let newVal = this.state.displayValue.toString();
-    console.log(newVal.includes('.'))
     if ((this.state.displayValue === '0' || this.state.operation !== null )) {
       this.setState({
         displayValue: e.currentTarget.value,
@@ -131,13 +122,11 @@ class App extends Component {
         this.setState({operation: null})
       }
       else if(this.state.operation !== null){
-        console.log("HERE");
         let value = parseFloat(this.state.displayValue);
         this.setState({previousValue: value})
       }
     }
     else {
-      console.log("ELSE");
       let newValue = this.state.displayValue;
       newValue += e.currentTarget.value;
       this.setState({ displayValue: newValue })
@@ -193,7 +182,6 @@ class App extends Component {
           <TheButtons name="." cb={this.chkDot} />
           <TheButtons name="=" orange="true" cb={this.operator} />
         </div>
-
       </div>
     );
 
